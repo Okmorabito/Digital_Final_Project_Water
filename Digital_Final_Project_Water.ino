@@ -19,6 +19,7 @@ AudioControlSGTL5000 sgtl5000_1;  //xy=391,209
 
 
 int solenoidPin = 36;
+int waterPumpPin = 37;
 int mappedPressure = 0;
 
 void setup() {
@@ -32,7 +33,7 @@ void setup() {
 }
 
 void loop() {
-  //waterValve();
+  waterValve();
   waterPump();
 }
 
@@ -41,22 +42,22 @@ void waterValve() {
     int peak = peak1.read() * 8;
     Serial.println(peak);
     if (peak > 5) {
-      digitalWrite(solenoidPin, HIGH);
+      analogWrite(solenoidPin, HIGH);
     }
     if (peak < 5) {
-      digitalWrite(solenoidPin, LOW);
+      analogWrite(solenoidPin, LOW);
     }
   }
 }
 
 void waterPump() {
-  // if (notefreq1.available()) {
-  //   float freq = notefreq1.read();
-  //   Serial.println(freq);
-  //   mappedPressure = map(freq, 440, 800, 0, 255);
-  // }
+  if (notefreq1.available()) {
+    float freq = notefreq1.read();
+    Serial.println(freq);
+    mappedPressure = map(freq, 440, 800, 0, 255);
+  }
   for (int i = 0; i < 255; i++) {
-    analogWrite(solenoidPin, i); //iterates through power voltages for water pump 
+    analogWrite(waterPumpPin, i); //iterates through power voltages for water pump 
     delay(10);
   }
 }
