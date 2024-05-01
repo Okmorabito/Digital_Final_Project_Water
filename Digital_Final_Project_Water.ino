@@ -39,29 +39,53 @@ void loop() {
   waterPump();
 }
 
-void waterValve() {
-  if (peak1.available()){
-    int peak = peak1.read() * 10.0;
-    //Serial.println(peak);
-    if (peak > 5) {
+void waterValve(){
+  if (notefreq1.available()) {
+    int freq = notefreq1.read();
+    if (freq > 500) {
       digitalWrite(solenoidPin, HIGH);
-    } if (peak < 5){
+    }
+    if (freq < 500) {
       digitalWrite(solenoidPin, LOW);
     }
   }
 }
 
-void waterPump() {
+void waterPump(){
   if (notefreq1.available()) {
     int freq = notefreq1.read();
-    int constrainedFreq = constrain(freq, 250, 530);    
-    Serial.println(constrainedFreq);
-    mappedPressure = map(constrainedFreq, 250, 530, 0, 255);
-    if (250 < constrainedFreq < 530) {
-      analogWrite(waterPumpPin, mappedPressure);
+    if (freq > 500) {
+      digitalWrite(waterPumpPin, LOW);
     }
-    if (250 > constrainedFreq < 530) {
-      analogWrite(waterPumpPin, 0);
+    if (freq < 500) {
+      digitalWrite(waterPumpPin, HIGH);
     }
   }
 }
+
+// void waterValve() {
+//   if (peak1.available()){
+//     int peak = peak1.read() * 10.0;
+//     //Serial.println(peak);
+//     if (peak > 5) {
+//       digitalWrite(solenoidPin, HIGH);
+//     } if (peak < 5){
+//       digitalWrite(solenoidPin, LOW);
+//     }
+//   }
+// }
+
+// void waterPump() {
+//   if (notefreq1.available()) {
+//     int freq = notefreq1.read();
+//     int constrainedFreq = constrain(freq, 250, 530);    
+//     Serial.println(constrainedFreq);
+//     mappedPressure = map(constrainedFreq, 250, 530, 0, 255);
+//     if (250 < constrainedFreq < 530) {
+//       analogWrite(waterPumpPin, mappedPressure);
+//     }
+//     if (250 > constrainedFreq < 530) {
+//       analogWrite(waterPumpPin, 0);
+//     }
+//   }
+// }
